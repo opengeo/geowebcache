@@ -297,7 +297,10 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
             throw new ConfigurationException(e.getMessage(), e);
         }
     }
-    
+
+    /**
+     * @see ServerConfiguration#isRuntimeStatsEnabled()
+     */
     public boolean isRuntimeStatsEnabled() {
         if (getGwcConfig() == null || getGwcConfig().getRuntimeStats() == null) {
             return true;
@@ -306,8 +309,27 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
         }
     }
 
+    /**
+     * @see ServerConfiguration#setIsRuntimeStatsEnabled(boolean)
+     * @param isEnabled
+     */
+    public void setIsRuntimeStatsEnabled(boolean isEnabled){
+        getGwcConfig().setRuntimeStats(isEnabled);
+    }
+
+    /**
+     * @see ServerConfiguration#getServiceInformation()
+     */
     public synchronized ServiceInformation getServiceInformation() {
         return getGwcConfig().getServiceInformation();
+    }
+
+    /**
+     * @see ServerConfiguration#setServiceInformation(ServiceInformation);
+     * @param serviceInfo
+     */
+    public void setServiceInformation(ServiceInformation serviceInfo){
+        getGwcConfig().setServiceInformation(serviceInfo);
     }
 
     /**
@@ -1076,7 +1098,10 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
     public String getVersion() {
         return getGwcConfig().getVersion();
     }
-    
+
+    /**
+     * @see ServerConfiguration#getfullWMS()
+     */
     @Override
     public Boolean getfullWMS(){
         if(getGwcConfig()!=null){
@@ -1085,14 +1110,35 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
         return null;        
     }
 
+    /**
+     * @see ServerConfiguration#setFullWMS(boolean)
+     * @param isFullWMS
+     */
+    @Override
+    public void setFullWMS(boolean isFullWMS){
+        getGwcConfig().setFullWMS(isFullWMS);
+    }
+
     @Override
     public List<BlobStoreConfig> getBlobStores() {
         return getGwcConfig().getBlobStores();
     }
-    
+
+    /**
+     * @see ServerConfiguration#getLockProvider()
+     */
     @Override
     public LockProvider getLockProvider() {
         return getGwcConfig().getLockProvider();
+    }
+
+    /**
+     * @see ServerConfiguration#setLockProvider(LockProvider)
+     * @param lockProvider
+     */
+    @Override
+    public void setLockProvider(LockProvider lockProvider){
+        getGwcConfig().setLockProvider(lockProvider);
     }
 
     private GeoWebCacheConfiguration getGwcConfig() {

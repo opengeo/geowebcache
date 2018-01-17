@@ -227,6 +227,7 @@ public class GeoWebCacheConfiguration {
     }
 
     /**
+     * @see ServerConfiguration#getServiceInformation()
      * @return the serviceInformation
      */
     public ServiceInformation getServiceInformation() {
@@ -234,6 +235,7 @@ public class GeoWebCacheConfiguration {
     }
 
     /**
+     * @see
      * @param serviceInformation
      *            the serviceInformation to set
      */
@@ -276,6 +278,7 @@ public class GeoWebCacheConfiguration {
     
     /**
      * Returns the chosen lock provider
+     * @see ServerConfiguration#getLockProvider()
      * @return
      */
     public LockProvider getLockProvider() {
@@ -300,8 +303,18 @@ public class GeoWebCacheConfiguration {
     }
 
     /**
+     * Set the LockProvider is present
+     * @see ServerConfiguration#setLockProvider(LockProvider)
+     * @param lockProvider to set for this configuration
+     */
+    public void setLockProvider(LockProvider lockProvider){
+        this.lockProviderInstance = lockProvider;
+    }
+
+    /**
      * Get the FullWMS value if present
-     * @return
+     * @see ServerConfiguration#getfullWMS()
+     * @return TRUE, FALSE, or NULL
      */
     public Boolean getFullWMS() {
         return fullWMS;
@@ -309,7 +322,8 @@ public class GeoWebCacheConfiguration {
 
     /**
      * Set the FullWMS value if present
-     * @return
+     * @see ServerConfiguration#setFullWMS(boolean)
+     * @param fullWMS is true or false
      */
     public void setFullWMS(Boolean fullWMS) {
         this.fullWMS = fullWMS;
