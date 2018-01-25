@@ -20,7 +20,7 @@ package org.geowebcache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geowebcache.config.BaseConfiguration;
-import org.geowebcache.config.BlobStoreConfig;
+import org.geowebcache.config.BlobStoreInfo;
 import org.geowebcache.config.ConfigurationException;
 import org.geowebcache.config.ServerConfiguration;
 import org.geowebcache.config.XMLConfiguration;
@@ -58,6 +58,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -515,7 +516,7 @@ public class GeoWebCacheDispatcher extends AbstractController {
         if(storageBroker instanceof DefaultStorageBroker) {
             BlobStore bStore = ((DefaultStorageBroker) storageBroker).getBlobStore();
             if(bStore instanceof CompositeBlobStore) {
-                for(BlobStoreConfig bsConfig: config.getBlobStores()) {
+                for(BlobStoreInfo bsConfig: config.getBlobStores()) {
                     blobStoreLocations.put(bsConfig.getId(), bsConfig.getLocation());
                 }
             }

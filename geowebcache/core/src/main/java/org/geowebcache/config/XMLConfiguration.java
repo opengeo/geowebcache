@@ -105,7 +105,7 @@ import com.thoughtworks.xstream.io.xml.DomReader;
  * otherwise this configuration is in an inconsistent and unpredictable state.
  * </p>
  */
-public class XMLConfiguration implements TileLayerConfiguration, InitializingBean, DefaultingConfiguration, ServerConfiguration, BlobStoreConfigurationCatalog, GridSetConfiguration {
+public class XMLConfiguration implements TileLayerConfiguration, InitializingBean, DefaultingConfiguration, ServerConfiguration, BlobStoreConfiguration, GridSetConfiguration {
     
     public static final String DEFAULT_CONFIGURATION_FILE_NAME = "geowebcache.xml";
 
@@ -464,7 +464,7 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
             xs.allowTypeHierarchy(org.geowebcache.layer.TileLayer.class);
             xs.allowTypeHierarchy(org.geowebcache.filter.parameters.ParameterFilter.class);
             xs.allowTypeHierarchy(org.geowebcache.filter.request.RequestFilter.class);
-            xs.allowTypeHierarchy(org.geowebcache.config.BlobStoreConfig.class);
+            xs.allowTypeHierarchy(org.geowebcache.config.BlobStoreInfo.class);
             xs.allowTypeHierarchy(TileLayerConfiguration.class);
             
             // Allow anything that's part of GWC
@@ -490,9 +490,9 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
         xs.registerConverter(new LegendsRawInfoConverter());
         xs.alias("legends", LegendsRawInfo.class);
 
-        xs.alias("blobStores", new ArrayList<BlobStoreConfig>().getClass());
-        xs.alias("FileBlobStore", FileBlobStoreConfig.class);
-        xs.aliasAttribute(BlobStoreConfig.class, "_default", "default");
+        xs.alias("blobStores", new ArrayList<BlobStoreInfo>().getClass());
+        xs.alias("FileBlobStore", FileBlobStoreInfo.class);
+        xs.aliasAttribute(BlobStoreInfo.class, "_default", "default");
 
         // These two are for 1.1.x compatibility
         xs.alias("grids", new ArrayList<XMLOldGrid>().getClass());
@@ -1123,7 +1123,7 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
     }
 
     @Override
-    public List<BlobStoreConfig> getBlobStores() {
+    public List<BlobStoreInfo> getBlobStores() {
         return getGwcConfig().getBlobStores();
     }
 

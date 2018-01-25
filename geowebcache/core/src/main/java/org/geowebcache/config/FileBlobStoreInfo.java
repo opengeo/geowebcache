@@ -29,9 +29,9 @@ import org.geowebcache.storage.blobstore.file.FileBlobStore;
  * Configration and factory for {@link FileBlobStore}.
  * 
  * @since 1.8
- * @see BlobStoreConfig
+ * @see BlobStoreInfo
  */
-public class FileBlobStoreConfig extends BlobStoreConfig {
+public class FileBlobStoreInfo extends BlobStoreInfo {
 
     private static final long serialVersionUID = -6470560864068854508L;
 
@@ -39,11 +39,11 @@ public class FileBlobStoreConfig extends BlobStoreConfig {
 
     private int fileSystemBlockSize;
 
-    public FileBlobStoreConfig() {
+    public FileBlobStoreInfo() {
         super();
     }
 
-    public FileBlobStoreConfig(String id) {
+    public FileBlobStoreInfo(String id) {
         super(id);
     }
 
@@ -84,7 +84,7 @@ public class FileBlobStoreConfig extends BlobStoreConfig {
     public String toString() {
         return new StringBuilder("FileBlobStore[id:").append(getId()).append(", enabled:")
                 .append(isEnabled()).append(", baseDirectory:").append(baseDirectory)
-                .append("fileSystemBlockSize:").append(fileSystemBlockSize).append(']').toString();
+                .append(", fileSystemBlockSize:").append(fileSystemBlockSize).append(']').toString();
     }
 
     @Override

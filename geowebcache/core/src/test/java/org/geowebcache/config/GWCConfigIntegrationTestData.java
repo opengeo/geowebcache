@@ -71,9 +71,9 @@ public class GWCConfigIntegrationTestData {
                 Collections.singletonList(parameterFilter), null, null, true));
 
         //Set up blobstores
-        BlobStoreConfigurationCatalog blobStoreConfiguration = testSupport.getBlobStoreConfiguration();
+        BlobStoreConfiguration blobStoreConfiguration = testSupport.getBlobStoreConfiguration();
 
-        FileBlobStoreConfig blobStore = new FileBlobStoreConfig(BLOBSTORE_FILE_DEFAULT);
+        FileBlobStoreInfo blobStore = new FileBlobStoreInfo(BLOBSTORE_FILE_DEFAULT);
         blobStore.setEnabled(false);
         blobStore.setBaseDirectory("/tmp/defaultCache");
         blobStore.setFileSystemBlockSize(4096);

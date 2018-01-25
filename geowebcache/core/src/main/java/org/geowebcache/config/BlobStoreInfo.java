@@ -29,7 +29,7 @@ import org.geowebcache.storage.StorageException;
 /**
  * Base class for configuration and factory of concrete {@link BlobStore} implementations.
  * <p>
- * Each realization of {@link BlobStore} should have a matching {@link BlobStoreConfig} subclass
+ * Each realization of {@link BlobStore} should have a matching {@link BlobStoreInfo} subclass
  * that acts both as configuration and {@link #createInstance() factory}.
  * <p>
  * Instances of this concrete subclasses of this class are meant to be obtained from
@@ -44,7 +44,7 @@ import org.geowebcache.storage.StorageException;
  * @since 1.8
  * @see FileBlobStoreConfig
  */
-public abstract class BlobStoreConfig implements Serializable, Cloneable {
+public abstract class BlobStoreInfo implements Serializable, Cloneable, Info {
 
     private static final long serialVersionUID = 1L;
 
@@ -54,11 +54,11 @@ public abstract class BlobStoreConfig implements Serializable, Cloneable {
 
     private boolean _default;
 
-    protected BlobStoreConfig() {
+    protected BlobStoreInfo() {
         //
     }
 
-    public BlobStoreConfig(String id) {
+    public BlobStoreInfo(String id) {
         this.id = id;
     }
 
@@ -68,6 +68,15 @@ public abstract class BlobStoreConfig implements Serializable, Cloneable {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Returns this {@link Info Info}s name. For now, this just returns this BlobStoreInfo's ID.
+     * @return A String representing the name of this Info implementation.
+     */
+    @Override
+    public String getName() {
+        return getId();
     }
 
     void setId(String id) {
