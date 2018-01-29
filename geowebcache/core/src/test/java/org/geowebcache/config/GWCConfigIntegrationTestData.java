@@ -78,8 +78,6 @@ public class GWCConfigIntegrationTestData {
         blobStore.setBaseDirectory("/tmp/defaultCache");
         blobStore.setFileSystemBlockSize(4096);
 
-        //TODO: Use new API to add blobstore
-        blobStoreConfiguration.getBlobStores().add(blobStore);
-        blobStoreConfiguration.save();
+        blobStoreConfiguration.addBlobStore(blobStore);
     }
 }

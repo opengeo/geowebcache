@@ -1124,7 +1124,183 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
 
     @Override
     public List<BlobStoreInfo> getBlobStores() {
-        return getGwcConfig().getBlobStores();
+        // need to return an unmodifiable list of unmodifiable BlobStoreInfos
+        return Collections.unmodifiableList(getGwcConfig().getBlobStores().
+            stream().map((info) -> {
+                return (BlobStoreInfo)info.clone();
+            }).collect(Collectors.toList())
+        );
+    }
+
+    @Override
+    public void addBlobStore(BlobStoreInfo info) {
+        if (info.getName() == null) {
+            throw new IllegalArgumentException("Failed to add BlobStoreInfo. A BlobStoreInfo name cannot be null");
+        }
+        // ensure there isn't a BlobStoreInfo with the same name already
+        if (getBlobStoreNames().contains(info.getName())) {
+            throw new IllegalArgumentException(String.format(
+                "Failed to add BlobStoreInfo. A BlobStoreInfo with name \"$s\" already exists", info.getName()));
+        }
+        // add the BlobStoreInfo
+        final List<BlobStoreInfo> blobStores = getGwcConfig().getBlobStores();
+        blobStores.add(info);
+        // try to save the config
+        try {
+            save();
+        } catch (IOException ioe) {
+            // save failed, roll back the add
+            blobStores.remove(info);
+            throw new ConfigurationPersistenceException(String.format(
+                "Unable to add BlobStoreInfo \"%s\"", info), ioe);
+        }
+    }
+
+    @Override
+    public void removeBlobStore(String name) {
+        // ensure there is a BlobStoreInfo with the name
+        final Optional<BlobStoreInfo> optionalInfo = getBlobStore(name);
+        if (!optionalInfo.isPresent()) {
+            throw new NoSuchElementException(String.format(
+                "Failed to remove BlobStoreInfo. A BlobStoreInfo with name \"%s\" does not exist.", name));
+        }
+        // remove the BlobStoreInfo
+        final List<BlobStoreInfo> blobStores = getGwcConfig().getBlobStores();
+        final BlobStoreInfo infoToRemove = optionalInfo.get();
+        blobStores.remove(infoToRemove);
+        // try to save
+        try {
+            save();
+        } catch (IOException ioe) {
+            // save failed, roll back the delete
+            blobStores.add(infoToRemove);
+            throw new ConfigurationPersistenceException(String.format(
+                "Unable to remove BlobStoreInfo \"%s\"", name), ioe);
+        }
+    }
+
+    @Override
+    public void modifyBlobStore(BlobStoreInfo info) {
+        if (info.getName() == null) {
+            throw new IllegalArgumentException("BlobStoreInfo name must not be null");
+        }
+        // ensure there is a BlobStoreInfo with the name
+        final Optional<BlobStoreInfo> optionalInfo = getBlobStore(info.getName());
+        if (!optionalInfo.isPresent()) {
+            throw new NoSuchElementException(String.format(
+                "Failed to modify BlobStoreInfo. A BlobStoreInfo with name \"%s\" does not exist.", info.getName()));
+        }
+        // remove existing and add the new one
+        final List<BlobStoreInfo> blobStores = getGwcConfig().getBlobStores();
+        final BlobStoreInfo infoToRemove = optionalInfo.get();
+        blobStores.remove(infoToRemove);
+        blobStores.add(info);
+        // try to save
+        try {
+            save();
+        } catch (IOException ioe) {
+            // save failed, roll back the modify
+            blobStores.remove(info);
+            blobStores.add(infoToRemove);
+            throw new ConfigurationPersistenceException(String.format(
+                "Unable to modify BlobStoreInfo \"%s\"", info.getName()), ioe);
+        }
+    }
+
+    @Override
+    public int getBlobStoreCount() {
+        return getGwcConfig().getBlobStores().size();
+    }
+
+    @Override
+    public Set<String> getBlobStoreNames() {
+        return getGwcConfig().getBlobStores().stream()
+            .map((info) -> {
+                return info.getName();
+            })
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Optional<BlobStoreInfo> getBlobStore(String name) {
+        for (BlobStoreInfo info : getGwcConfig().getBlobStores()) {
+            if (info.getName().equals(name)) {
+                return Optional.of((BlobStoreInfo)info.clone());
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean canSave(BlobStoreInfo info) {
+        // if the resourceProvider has output, then it should be saveable. NOTE, this does not guarantee that there are
+        // sufficient write permissions to the underlying resource.
+        return resourceProvider.hasOutput();
+    }
+
+    @Override
+    public void renameBlobStore(String oldName, String newName)
+        throws NoSuchElementException, IllegalArgumentException {
+        // if a BlobStoreInfo with newName already exists, throw IllegalArgumentException
+        final Optional<BlobStoreInfo> newInfo = getBlobStore(newName);
+        if (newInfo.isPresent()) {
+            throw new IllegalArgumentException(
+                "BlobStoreInfo rename unsuccessful. A BlobStoreInfo with name \"" + newName + "\" already exists.");
+        }
+        // get the list of BlobStoreInfos
+        final List<BlobStoreInfo> blobStoreInfos = getGwcConfig().getBlobStores();
+        // find the one to rename
+        Iterator<BlobStoreInfo> infos = blobStoreInfos.iterator();
+        BlobStoreInfo blobStoreInfoToRename = null;
+        while (infos.hasNext() && blobStoreInfoToRename == null) {
+            final BlobStoreInfo info = infos.next();
+            if (info.getName().equals(oldName)) {
+                // found the one to rename
+                // remove from the iterator
+                infos.remove();
+                blobStoreInfoToRename = info;
+            }
+        }
+        // if we didn't remove one, it wasn't in there to be removed
+        if (blobStoreInfoToRename == null) {
+            throw new NoSuchElementException(
+                "BlobStoreInfo rename unsuccessful. No BlobStoreInfo with name \"" + oldName + "\" exists.");
+        }
+        // rename it and add it back to the list
+        // for BlobStoreInfo instances, "name" and "id" are the same thing.
+        blobStoreInfoToRename.setId(newName);
+        blobStoreInfos.add(blobStoreInfoToRename);
+        // persist the info
+        try {
+            save();
+            if (log.isTraceEnabled()) {
+                log.trace(String.format(
+                    "BlobStoreInfo rename from \"%s\" to \"%s\" successful.", oldName, newName));
+            }
+        } catch (IOException ioe) {
+            // save didn't work, need to roll things back
+            infos = blobStoreInfos.iterator();
+            BlobStoreInfo blobStoreInfoToRevert = null;
+            while (infos.hasNext() && blobStoreInfoToRevert == null) {
+                final BlobStoreInfo info = infos.next();
+                if (info.getName().equals(newName)) {
+                    // found the one to roll back
+                    infos.remove();
+                    blobStoreInfoToRevert = info;
+                }
+            }
+            if (blobStoreInfoToRevert == null) {
+                // we're really messed up now as we couldn't find the BlobStoreInfo that was just renamed.
+                throw new IllegalArgumentException(String.format(
+                    "Error reverting BlobStoreInfo modification. Could not revert rename from \"%s\" to \"%s\"",
+                    oldName, newName));
+            }
+            // revert the name and add it back to the list
+            blobStoreInfoToRevert.setId(oldName);
+            blobStoreInfos.add(blobStoreInfoToRevert);
+            throw new IllegalArgumentException(String.format(
+                "Unable to rename BlobStoreInfo from \"%s\" to \"%s\"", oldName, newName), ioe);
+        }
     }
 
     /**
@@ -1271,7 +1447,7 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
         
         GridSet old = gridSets.get(gridSet.getName());
         if(old==null) {
-            throw new NoSuchElementException("GridSet " + gridSet.getName() + " already exists");
+            throw new NoSuchElementException("GridSet " + gridSet.getName() + " does not exist");
         }
         
         assert getGwcConfig().getGridSets().stream().anyMatch(xgs->xgs.getName().equals(gridSet.getName()));
