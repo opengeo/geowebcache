@@ -1133,7 +1133,7 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
     }
 
     @Override
-    public void addBlobStore(BlobStoreInfo info) {
+    public synchronized void addBlobStore(BlobStoreInfo info) {
         if (info.getName() == null) {
             throw new IllegalArgumentException("Failed to add BlobStoreInfo. A BlobStoreInfo name cannot be null");
         }
@@ -1157,7 +1157,7 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
     }
 
     @Override
-    public void removeBlobStore(String name) {
+    public synchronized void removeBlobStore(String name) {
         // ensure there is a BlobStoreInfo with the name
         final Optional<BlobStoreInfo> optionalInfo = getBlobStore(name);
         if (!optionalInfo.isPresent()) {
@@ -1180,7 +1180,7 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
     }
 
     @Override
-    public void modifyBlobStore(BlobStoreInfo info) {
+    public synchronized void modifyBlobStore(BlobStoreInfo info) {
         if (info.getName() == null) {
             throw new IllegalArgumentException("BlobStoreInfo name must not be null");
         }
@@ -1441,7 +1441,7 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
     }
 
     @Override
-    public void modifyGridSet(GridSet gridSet)
+    public synchronized void modifyGridSet(GridSet gridSet)
             throws NoSuchElementException, IllegalArgumentException, UnsupportedOperationException {
         validateGridSet(gridSet);
         
