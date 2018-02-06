@@ -313,8 +313,9 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
      * @see ServerConfiguration#setIsRuntimeStatsEnabled(boolean)
      * @param isEnabled
      */
-    public void setIsRuntimeStatsEnabled(boolean isEnabled){
+    public void setIsRuntimeStatsEnabled(boolean isEnabled) throws IOException {
         getGwcConfig().setRuntimeStats(isEnabled);
+        save();
     }
 
     /**
@@ -328,8 +329,9 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
      * @see ServerConfiguration#setServiceInformation(ServiceInformation);
      * @param serviceInfo
      */
-    public void setServiceInformation(ServiceInformation serviceInfo){
+    public void setServiceInformation(ServiceInformation serviceInfo) throws IOException {
         getGwcConfig().setServiceInformation(serviceInfo);
+        save();
     }
 
     /**
@@ -1115,8 +1117,9 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
      * @param isFullWMS
      */
     @Override
-    public void setFullWMS(boolean isFullWMS){
+    public void setFullWMS(boolean isFullWMS) throws IOException {
         getGwcConfig().setFullWMS(isFullWMS);
+        save();
     }
 
     @Override
@@ -1137,8 +1140,9 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
      * @param lockProvider
      */
     @Override
-    public void setLockProvider(LockProvider lockProvider){
+    public void setLockProvider(LockProvider lockProvider) throws IOException {
         getGwcConfig().setLockProvider(lockProvider);
+        save();
     }
 
     private GeoWebCacheConfiguration getGwcConfig() {
@@ -1166,11 +1170,12 @@ public class XMLConfiguration implements TileLayerConfiguration, InitializingBea
      * @param wmtsCiteStrictCompliant TRUE or FALSE, activating or deactivation CITE
      *                                strict compliance mode for WMTS
      */
-    public void setWmtsCiteStrictCompliant(boolean wmtsCiteStrictCompliant) {
+    public void setWmtsCiteStrictCompliant(boolean wmtsCiteStrictCompliant) throws IOException {
         if (gwcConfig != null) {
             // activate or deactivate CITE strict compliance mode for WMTS implementation
             gwcConfig.setWmtsCiteCompliant(wmtsCiteStrictCompliant);
         }
+        save();
     }
 
     @Override

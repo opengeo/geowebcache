@@ -16,13 +16,13 @@ import static org.junit.Assert.*;
 
 public class ServerConfigurationTest {
 
-
     ServerConfiguration config;
 
      @Rule
      public TemporaryFolder temp = new TemporaryFolder();
      private File configDir;
      private File configFile;
+     private GridSetBroker gridSetBroker;
 
 
     @Test
@@ -48,7 +48,6 @@ public class ServerConfigurationTest {
 
         Boolean fullWMS = config.getfullWMS();
         assertNull(fullWMS);
-        // Checking to see if fullWMS changes correctly
         config.setFullWMS(true);
         fullWMS = config.getfullWMS();
         assertTrue(fullWMS);
@@ -58,6 +57,19 @@ public class ServerConfigurationTest {
         config.setWmtsCiteStrictCompliant(true);
         wmtsCiteCompliant = config.isWmtsCiteCompliant();
         assertTrue(wmtsCiteCompliant);
+
+        // Reloading the configuration from the XML file to confirm persistance
+        config.initialize(gridSetBroker);
+        ServiceInformation savedInfo = config.getServiceInformation();
+        assertEquals(savedInfo.getProviderName(), "John Adams inc.");
+        assertFalse(config.isRuntimeStatsEnabled());
+        assertTrue(config.getfullWMS());
+        assertTrue((config.isWmtsCiteCompliant()));
+
+
+
+
+
     }
 
     protected ServerConfiguration getConfig() throws Exception {
@@ -70,7 +82,7 @@ public class ServerConfigurationTest {
              FileUtils.copyURLToFile(source, configFile);
              }
              // initialize the config with an XMLFileResourceProvider that uses the temp config file
-         GridSetBroker gridSetBroker = new GridSetBroker(true, true);
+        gridSetBroker = new GridSetBroker(true, true);
          ConfigurationResourceProvider configProvider =
              new XMLFileResourceProvider(XMLConfiguration.DEFAULT_CONFIGURATION_FILE_NAME,
                  (WebApplicationContext)null, configDir.getAbsolutePath(), null);

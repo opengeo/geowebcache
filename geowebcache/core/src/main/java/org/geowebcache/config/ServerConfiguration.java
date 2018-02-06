@@ -3,6 +3,8 @@ package org.geowebcache.config;
 import org.geowebcache.config.meta.ServiceInformation;
 import org.geowebcache.locks.LockProvider;
 
+import java.io.IOException;
+
 public interface ServerConfiguration extends BaseConfiguration {
 
     /**
@@ -15,7 +17,7 @@ public interface ServerConfiguration extends BaseConfiguration {
      * Used to set the service information for this configuration.
      * @param serviceInfo
      */
-    void setServiceInformation(ServiceInformation serviceInfo);
+    void setServiceInformation(ServiceInformation serviceInfo) throws IOException;
 
     /**
      * Runtime statistics run, by default, every three second and provide data about how many requests the system has
@@ -28,7 +30,7 @@ public interface ServerConfiguration extends BaseConfiguration {
      * Set if runtime statistics is enabled for this configuration, True or False.
      * @param isEnabled
      */
-    void setIsRuntimeStatsEnabled(boolean isEnabled);
+    void setIsRuntimeStatsEnabled(boolean isEnabled) throws IOException;
 
     /**
      * The name of the lock provider.
@@ -40,7 +42,7 @@ public interface ServerConfiguration extends BaseConfiguration {
      * Set the lock provider for this configuration.
      * @param lockProvider
      */
-    void setLockProvider(LockProvider lockProvider);
+    void setLockProvider(LockProvider lockProvider) throws IOException;
 
     /**
      * Used for getting the "fullWMS" parameter from GeoWebCacheConfigration if present
@@ -52,7 +54,7 @@ public interface ServerConfiguration extends BaseConfiguration {
      * Used to set fullWMS is parameter for this configuration if present.
      * @param isFullWMS
      */
-    void setFullWMS(boolean isFullWMS);
+    void setFullWMS(boolean isFullWMS) throws IOException;
 
     /**
      * If this method returns NULL CITE strict compliance mode should not be considered for WMTS
@@ -69,6 +71,6 @@ public interface ServerConfiguration extends BaseConfiguration {
      * @param wmtsCiteStrictCompliant TRUE or FALSE, activating or deactivation CITE
      *                                strict compliance mode for WMTS
      */
-    void setWmtsCiteStrictCompliant(boolean wmtsCiteStrictCompliant);
+    void setWmtsCiteStrictCompliant(boolean wmtsCiteStrictCompliant) throws IOException;
 
 }

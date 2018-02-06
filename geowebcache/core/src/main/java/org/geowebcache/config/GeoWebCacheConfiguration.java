@@ -228,15 +228,13 @@ public class GeoWebCacheConfiguration {
 
     /**
      * @see ServerConfiguration#getServiceInformation()
-     * @return the serviceInformation
      */
     public ServiceInformation getServiceInformation() {
         return serviceInformation;
     }
 
     /**
-     * @see
-     * @param serviceInformation
+     * @see ServerConfiguration#setServiceInformation(ServiceInformation)
      *            the serviceInformation to set
      */
     public void setServiceInformation(ServiceInformation serviceInformation) {
