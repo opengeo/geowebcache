@@ -517,7 +517,7 @@ public class GeoWebCacheDispatcher extends AbstractController {
             BlobStore bStore = ((DefaultStorageBroker) storageBroker).getBlobStore();
             if(bStore instanceof CompositeBlobStore) {
                 for(BlobStoreInfo bsConfig: config.getBlobStores()) {
-                    blobStoreLocations.put(bsConfig.getId(), bsConfig.getLocation());
+                    blobStoreLocations.put(bsConfig.getName(), bsConfig.getLocation());
                 }
             }
         }

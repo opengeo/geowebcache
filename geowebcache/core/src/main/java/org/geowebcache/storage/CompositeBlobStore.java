@@ -169,7 +169,7 @@ public class CompositeBlobStore implements BlobStore {
                     bs.liveInstance.destroy();
                 }
             } catch (Exception e) {
-                log.error("Error disposing BlobStore " + bs.config.getId(), e);
+                log.error("Error disposing BlobStore " + bs.config.getName(), e);
             }
         }
         blobStores.clear();
@@ -249,7 +249,7 @@ public class CompositeBlobStore implements BlobStore {
         }
         if (!store.config.isEnabled()) {
             throw new StorageException("Attempted to use a blob store that's disabled: "
-                    + store.config.getId());
+                    + store.config.getName());
         }
 
         return store.liveInstance;
@@ -327,7 +327,7 @@ public class CompositeBlobStore implements BlobStore {
 
         try {
             for (BlobStoreInfo config : configs) {
-                final String id = config.getId();
+                final String id = config.getName();
                 final boolean enabled = config.isEnabled();
                 if (Strings.isNullOrEmpty(id)) {
                     throw new ConfigurationException("No id provided for blob store " + config);
@@ -347,20 +347,20 @@ public class CompositeBlobStore implements BlobStore {
                 }
 
                 LiveStore liveStore = new LiveStore(config, store);
-                stores.put(config.getId(), liveStore);
+                stores.put(config.getName(), liveStore);
 
                 if (config.isDefault()) {
                     if (defaultStore == null) {
                         if (!enabled) {
                             throw new ConfigurationException(
-                                    "The default blob store can't be disabled: " + config.getId());
+                                    "The default blob store can't be disabled: " + config.getName());
                         }
 
                         defaultStore = config;
                         stores.put(CompositeBlobStore.DEFAULT_STORE_DEFAULT_ID, liveStore);
                     } else {
                         throw new ConfigurationException("Duplicate default blob store: "
-                                + defaultStore.getId() + " and " + config.getId());
+                                + defaultStore.getName() + " and " + config.getName());
                     }
                 }
             }

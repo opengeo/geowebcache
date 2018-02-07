@@ -82,14 +82,14 @@ public class FileBlobStoreInfo extends BlobStoreInfo {
 
     @Override
     public String toString() {
-        return new StringBuilder("FileBlobStore[id:").append(getId()).append(", enabled:")
+        return new StringBuilder("FileBlobStore[id:").append(getName()).append(", enabled:")
                 .append(isEnabled()).append(", baseDirectory:").append(baseDirectory)
                 .append(", fileSystemBlockSize:").append(fileSystemBlockSize).append(']').toString();
     }
 
     @Override
     public BlobStore createInstance(TileLayerDispatcher layers, LockProvider lockProvider) throws StorageException {
-        checkState(getId() != null, "id not set");
+        checkState(getName() != null, "id not set");
         checkState(isEnabled(),
                 "Can't call FileBlobStoreConfig.createInstance() is blob store is not enabled");
         checkState(baseDirectory != null, "baseDirectory not provided");

@@ -186,7 +186,7 @@ public class OperationsRest {
                     break;
                 }
             }
-            if (candidateBlobStoreConfig.getId().equals(blobStoreId)) {
+            if (candidateBlobStoreConfig.getName().equals(blobStoreId)) {
                 // we need to find a specific store by is id
                 blobStoreConfig = candidateBlobStoreConfig;
                 break;

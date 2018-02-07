@@ -79,4 +79,11 @@ public interface BlobStoreConfiguration extends BaseConfiguration {
      * by the supplied name (for example, newName is null or invalid).
      */
     void renameBlobStore(String oldName, String newName) throws NoSuchElementException, IllegalArgumentException;
+
+    /**
+     * Indicates if this configurations contains a {@link BlobStoreInfo) identified by a given name.
+     * @param name The unique name of a {@link BlobStoreInfo} for which existence is desired.
+     * @return True if a {@link BlobStoreInfo} currently exists with the unique name provided, false otherwise.
+     */
+    boolean containsBlobStore(String name);
 }

@@ -341,7 +341,7 @@ public class S3BlobStoreInfo extends BlobStoreInfo {
             throws StorageException {
 
         checkNotNull(layers);
-        checkState(getId() != null);
+        checkState(getName() != null);
         checkState(isEnabled(),
                 "Can't call S3BlobStoreConfig.createInstance() is blob store is not enabled");
         return new S3BlobStore(this, layers, lockProvider);

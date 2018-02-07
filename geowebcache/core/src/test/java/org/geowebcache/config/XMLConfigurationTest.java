@@ -346,14 +346,14 @@ public class XMLConfigurationTest {
     @Test
     public void testSaveBlobStores() throws Exception{
         FileBlobStoreInfo store1 = new FileBlobStoreInfo();
-        store1.setId("store1");
+        store1.setName("store1");
         store1.setDefault(true);
         store1.setEnabled(true);
         store1.setFileSystemBlockSize(8096);
         store1.setBaseDirectory("/tmp/test");
         
         FileBlobStoreInfo store2 = new FileBlobStoreInfo();
-        store2.setId("store2");
+        store2.setName("store2");
         store2.setDefault(false);
         store2.setEnabled(false);
         store2.setFileSystemBlockSize(512);

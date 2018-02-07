@@ -60,7 +60,7 @@ public class GWCConfigIntegrationRoundTripTest {
         List<BlobStoreInfo> blobStores = config.getBlobStores();
         List<String> blobStoreNames = Arrays.asList(BLOBSTORES);
         for (BlobStoreInfo blobStoreConfig : blobStores) {
-            assertTrue(blobStoreNames.contains(blobStoreConfig.getId()));
+            assertTrue(blobStoreNames.contains(blobStoreConfig.getName()));
         }
         assertEquals(BLOBSTORES.length, blobStores.size());
     }
