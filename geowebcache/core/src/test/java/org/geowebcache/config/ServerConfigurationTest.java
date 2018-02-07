@@ -58,7 +58,7 @@ public class ServerConfigurationTest {
         wmtsCiteCompliant = config.isWmtsCiteCompliant();
         assertTrue(wmtsCiteCompliant);
 
-        // Reloading the configuration from the XML file to confirm persistance
+        // Initialize to reload the configuration from the XML file and test persistence
         config.initialize(gridSetBroker);
         ServiceInformation savedInfo = config.getServiceInformation();
         assertEquals(savedInfo.getProviderName(), "John Adams inc.");
